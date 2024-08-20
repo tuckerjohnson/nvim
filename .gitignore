@@ -1,2 +1,5 @@
+lua/
+autoload/
+plugged/
 !init.vim
 !shortcuts.vim
