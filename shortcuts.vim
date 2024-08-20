@@ -1,0 +1,9 @@
+cmap ;cac ~/.cache
+cmap ;cf ~/.config
+cmap ;dl ~/Downloads
+cmap ;h ~/
+cmap ;d ~/Documents
+cmap ;ls ~/.local/share
+cmap ;lsr ~/.local/src
+cmap ;lb ~/.local/bin
+cmap ;src ~/.local/src
