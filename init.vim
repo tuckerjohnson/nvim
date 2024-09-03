@@ -12,6 +12,7 @@ map ,, :keepp /<++><CR>ca<
 call plug#begin(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/plugged"'))
 Plug 'tribela/vim-transparent'
 Plug 'morhetz/gruvbox'
+Plug 'sainnhe/everforest'
 Plug 'tpope/vim-surround'
 Plug 'tommcdo/vim-express'
 Plug 'preservim/nerdtree'
@@ -21,6 +22,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'tpope/vim-commentary'
 Plug 'ap/vim-css-color'
 Plug 'vuciv/vim-bujo'
+Plug 'davidgranstrom/scnvim'
 call plug#end()
 
 set title
@@ -54,22 +56,14 @@ map <leader>o :setlocal spell! spelllang=en_us<CR>
 
 " splits
 set splitbelow splitright
-map <leader>N :vsp<space>~/Notes/index.md<CR>
-map <leader>C :vsp<space>~/Notes/calendar.rem<CR>
-map <leader>B :vsp<space>$REFER<CR>
 map <leader>T :Todo<cr>
+map <leader>C :vsp<space>$CALENDAR<CR>
 
 " split navigation
 map <C-h> <C-w>h
 map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
-
-" BUJO
-imap <C-N> <Plug>BujoAddinsert
-nmap <C-D> <Plug>BujoChecknormal
-imap <C-D> <Plug>BujoCheckinsert
-let g:bujo#window_width = 80
 
 " Nerd tree
 let NERDTreeMinimalUI=1
@@ -91,7 +85,6 @@ autocmd BufRead,BufNewFile *.ms,*.me,*.mom,*.man set filetype=groff
 
 " Sudo file saves
 cabbrev w!! execute 'silent! write !sudo tee % >/dev/null' <bar> edit!
-autocmd FileType lilypond setlocal commentstring=%\ %s
 
 " remove trailing whitespace and newlines on write
 autocmd BufWritePre * let currPos = getpos(".")
@@ -107,4 +100,38 @@ autocmd BufWritePost Xresources,Xdefaults,xresources,xdefaults !xrdb %
 autocmd BufWritePost ~/.local/src/dwmblocks/config.h !cd ~/.local/src/dwmblocks/; sudo make install && { killall -q dwmblocks;setsid -f dwmblocks }
 
 silent! source ~/.config/nvim/shortcuts.vim
-lua require('nt_extensions/nt_extensions')
+
+lua << EOF
+local scnvim = require 'scnvim'
+local map = scnvim.map
+local map_expr = scnvim.map_expr
+
+scnvim.setup({
+  keymaps = {
+    ['<M-e>'] = map('editor.send_line', {'i', 'n'}),
+    ['<C-e>'] = {
+      map('editor.send_block', {'i', 'n'}),
+      map('editor.send_selection', 'x'),
+    },
+    ['<CR>'] = map('postwin.toggle'),
+    ['<M-CR>'] = map('postwin.toggle', 'i'),
+    ['<M-L>'] = map('postwin.clear', {'n', 'i'}),
+    ['<C-k>'] = map('signature.show', {'n', 'i'}),
+    ['<F12>'] = map('sclang.hard_stop', {'n', 'x', 'i'}),
+    ['<leader>st'] = map('sclang.start'),
+    ['<leader>sk'] = map('sclang.recompile'),
+    ['<F1>'] = map_expr('s.boot'),
+    ['<F2>'] = map_expr('s.meter'),
+  },
+  editor = {
+    highlight = {
+      color = 'IncSearch',
+    },
+  },
+  postwin = {
+    float = {
+      enabled = true,
+    },
+  },
+})
+EOF
