@@ -11,8 +11,7 @@ map ,, :keepp /<++><CR>ca<
 
 call plug#begin(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/plugged"'))
 Plug 'tribela/vim-transparent'
-Plug 'morhetz/gruvbox'
-Plug 'sainnhe/everforest'
+Plug 'sainnhe/gruvbox-material'
 Plug 'tpope/vim-surround'
 Plug 'tommcdo/vim-express'
 Plug 'preservim/nerdtree'
@@ -40,7 +39,16 @@ set tabstop=4
 set shiftwidth=4
 set expandtab
 set mouse=
-colorscheme gruvbox
+
+if has('termguicolors')
+    set termguicolors
+endif
+
+let g:gruvbox_material_better_performance = 1
+let g:gruvbox_material_ui_contrast = 1
+let g:gruvbox_material_foreground = 'original'
+
+colorscheme gruvbox-material
 
 nnoremap c "_c
 set nocompatible
