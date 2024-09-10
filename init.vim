@@ -40,10 +40,6 @@ set shiftwidth=4
 set expandtab
 set mouse=
 
-if has('termguicolors')
-    set termguicolors
-endif
-
 let g:gruvbox_material_better_performance = 1
 let g:gruvbox_material_ui_contrast = 1
 let g:gruvbox_material_foreground = 'original'
@@ -109,6 +105,8 @@ autocmd BufWritePost ~/.local/src/dwmblocks/config.h !cd ~/.local/src/dwmblocks/
 
 silent! source ~/.config/nvim/shortcuts.vim
 
+autocmd FileType scnvim setlocal wrap
+
 lua << EOF
 local scnvim = require 'scnvim'
 local map = scnvim.map
@@ -116,20 +114,22 @@ local map_expr = scnvim.map_expr
 
 scnvim.setup({
   keymaps = {
-    ['<M-e>'] = map('editor.send_line', {'i', 'n'}),
-    ['<C-e>'] = {
-      map('editor.send_block', {'i', 'n'}),
+    ['<CR>'] = {
+      map('editor.send_block', 'n'),
       map('editor.send_selection', 'x'),
     },
-    ['<CR>'] = map('postwin.toggle'),
+    ['<M-w>'] = map('postwin.toggle'),
     ['<M-CR>'] = map('postwin.toggle', 'i'),
     ['<M-L>'] = map('postwin.clear', {'n', 'i'}),
     ['<C-k>'] = map('signature.show', {'n', 'i'}),
     ['<F12>'] = map('sclang.hard_stop', {'n', 'x', 'i'}),
-    ['<leader>st'] = map('sclang.start'),
-    ['<leader>sk'] = map('sclang.recompile'),
-    ['<F1>'] = map_expr('s.boot'),
-    ['<F2>'] = map_expr('s.meter'),
+    ['<leader>ST'] = map('sclang.start'),
+    ['<leader>SP'] = map('sclang.stop'),
+    ['<leader>SK'] = map('sclang.recompile'),
+    ['<leader>BS'] = map_expr('s.boot'),
+    ['<leader>FA'] = map_expr('s.freeAll'),
+    ['<leader>KA'] = map_expr('Server.killAll'),
+    ['<M-m>'] = map_expr('s.meter'),
   },
   editor = {
     highlight = {
@@ -137,9 +137,8 @@ scnvim.setup({
     },
   },
   postwin = {
-    float = {
-      enabled = true,
-    },
+    highlight = true,
+    size = 80,
   },
 })
 EOF
